@@ -1,0 +1,104 @@
+This directory contains files to create a front end for a
+C-- compiler using flex and yacc.
+
+FILES:
+=====
+These are the files present initially:
+
+  README	this file
+
+  Makefile	builds the front end; this results in an executable
+		called "parse".
+		
+		Defining the symbol DEBUG in the variable CFLAGS will
+		cause the syntax tree to be printed out after processing
+		each function.
+
+  main.c	The driver program that calls the parser.
+
+  error.h	Defines various types of errors for special handling.
+
+  error.c	Routines for reporting error messages.
+
+  parser.y	Yacc specification for the parser.
+
+  print.c       Code for printing stuff out.  Right now it contains code
+                for printing out syntax trees.
+
+  protos.h      Prototypes.  Right now it contains prototypes for 
+  	        syntax tree accessor functions.
+
+  scanner.l	Flex specification for the scanner.
+
+  symbol-table.h  Typedefs etc. for symbol tables.
+
+  symbol-table.c  Code for maintaining and accessing the symbol table.
+
+  syntax-tree.h  Typedefs etc. for syntax trees.
+
+  syntax-tree.c  Code for constructing the syntax tree.
+
+  util.h        Declarations and prototypes for utility routines.
+
+  util.c        Assorted utilities.
+
+Additionally, the following files are created during the build process:
+
+  y.tab.h, 
+  y.tab.c, 
+  y.output	Created by yacc.
+
+  lex.yy.c	Created by flex.
+
+GLOBAL VARIABLES:
+================
+
+  char *id_name		When the scanner recognizes an identifier, this
+			variable points to (a copy of) the lexeme.  This is
+			what needs to be accessed when you subsequently
+			want to get at the identifier's name, since by
+			that time yytext may have been long since overwritten.
+
+			Defined by the function id_or_keywd() in file
+						scanner.l.
+
+  int ival              When a scanner recognizes an integer or character
+                        constant, this variable is assigned the value of
+                        that constant.  Defined in scanner.l.
+
+  int linenum		Contains the line number currently being processed.
+			Typically used in error messages.  Defined in scanner.l.
+
+  int errstate		Indicates what kind of an error has occurred.  The
+			parser treats a few kinds of errors specially: the
+			nature of such special errors is communicated to yyerror()
+			via the variable errstate.  For the values this can
+			take on, see errmrgs.h --- the value ORDINARY refers
+			to errors that don't get any special handling.
+
+
+SYMBOL TABLES
+=============
+Declarations pertaining to symbol tables are in the file symbol-table.h.
+
+
+
+SYNTAX TREES
+============
+Declarations pertaining to syntax trees are in the file syntax-tree.h.
+Components of syntax tree nodes can be accessed via the accessor functions
+whose prototypes are given in protos.h.
+
+
+
+BUILDING THE SYSTEM
+===================
+Type "make", this will create an executable named "compile".
+
+
+
+INVOKING THE PROGRAM
+====================
+This program reads from stdin and writes error messages to stderr.  If
+compiled with the flag -DDEBUG, syntax trees are printed to stdout.  Other
+than this, syntactically correct input files are accepted silently.

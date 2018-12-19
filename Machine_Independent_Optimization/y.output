@@ -1,0 +1,2339 @@
+State 161 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: prog $end
+
+    1 prog: prog type id_list ';'
+    2     | prog type Ident '(' SetFnInfo parm_types ')' fprotRest
+    3     | prog Extern type Ident '(' SetFnInfo parm_types ')' fprotRest
+
+    4 $@1: %empty
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}'
+    6     | %empty
+
+    7 Extern: EXTERN
+
+    8 SetFnInfo: %empty
+
+    9 $@2: %empty
+
+   10 fprotRest: comma $@2 fprototype SetFnInfo fprotRest
+   11          | ';'
+
+   12 fprototype: Ident '(' parm_types ')'
+
+   13 parm_types: VOID
+   14           | nonempty_parm_type_list
+
+   15 nonempty_parm_type_list: nonempty_parm_type_list comma parm_type_decl
+   16                        | parm_type_decl
+
+   17 parm_type_decl: type Ident
+   18               | type Ident '[' ']'
+
+   19 type: INT
+   20     | CHAR
+   21     | VOID
+
+   22 var_decls: var_decls var_decl ';'
+   23          | %empty
+
+   24 var_decl: type id_list
+
+   25 $@3: %empty
+
+   26 id_list: id_list comma $@3 id_decl
+
+   27 $@4: %empty
+
+   28 id_list: error comma $@4 id_decl
+   29        | id_decl
+
+   30 id_decl: Ident
+   31        | Ident '[' ArraySize ']'
+
+   32 ArraySize: INTCON
+
+   33 stmt_list: stmt stmt_list
+   34          | %empty
+
+   35 stmt: IF '(' boolexp ')' stmt optional_else
+   36     | WHILE '(' boolexp ')' stmt
+   37     | FOR '(' optional_assgt semicolon optional_boolexp semicolon optional_assgt ')' stmt
+   38     | RETURN optional_expr semicolon
+   39     | assignment semicolon
+   40     | proc_call semicolon
+   41     | compound_stmt
+   42     | ';'
+   43     | error
+
+   44 semicolon: ';'
+
+   45 $@5: %empty
+
+   46 semicolon: $@5 error
+
+   47 comma: ','
+
+   48 $@6: %empty
+
+   49 comma: $@6 error
+
+   50 compound_stmt: '{' stmt_list '}'
+
+   51 optional_else: ELSE stmt
+   52              | %empty
+
+   53 optional_assgt: assignment
+   54               | %empty
+
+   55 optional_expr: expr
+   56              | %empty
+
+   57 optional_boolexp: boolexp
+   58                 | %empty
+
+   59 assignment: variable '=' expr
+
+   60 boolexp: expr EQ expr
+   61        | expr NEQ expr
+   62        | expr LE expr
+   63        | expr GE expr
+   64        | expr '<' expr
+   65        | expr '>' expr
+   66        | '!' boolexp
+   67        | boolexp AND boolexp
+   68        | boolexp OR boolexp
+   69        | '(' boolexp ')'
+
+   70 expr: '-' expr
+   71     | expr '+' expr
+   72     | expr '-' expr
+   73     | expr '*' expr
+   74     | expr '/' expr
+   75     | fun_call
+   76     | variable
+   77     | '(' expr ')'
+   78     | '(' error ')'
+   79     | INTCON
+   80     | CHARCON
+   81     | STRINGCON
+
+   82 fun_call: Ident '(' ')'
+   83         | Ident '(' expr_list ')'
+   84         | Ident '(' error ')'
+
+   85 proc_call: Ident '(' ')'
+   86          | Ident '(' expr_list ')'
+   87          | Ident '(' error ')'
+
+   88 variable: Ident
+   89         | Ident '[' expr ']'
+   90         | Ident '[' error ']'
+
+   91 expr_list: expr comma expr_list
+   92          | expr
+
+   93 Ident: ID
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 66
+'(' (40) 2 3 5 12 35 36 37 69 77 78 82 83 84 85 86 87
+')' (41) 2 3 5 12 35 36 37 69 77 78 82 83 84 85 86 87
+'*' (42) 73
+'+' (43) 71
+',' (44) 47
+'-' (45) 70 72
+'/' (47) 74
+';' (59) 1 11 22 42 44
+'<' (60) 64
+'=' (61) 59
+'>' (62) 65
+'[' (91) 18 31 89 90
+']' (93) 18 31 89 90
+'{' (123) 5 50
+'}' (125) 5 50
+error (256) 28 43 46 49 78 84 87 90
+ID (258) 93
+INTCON (259) 32 79
+CHARCON (260) 80
+STRINGCON (261) 81
+CHAR (262) 20
+INT (263) 19
+VOID (264) 13 21
+EXTERN (265) 7
+IF (266) 35
+ELSE (267) 51
+WHILE (268) 36
+FOR (269) 37
+RETURN (270) 38
+AND (271) 67
+OR (272) 68
+EQ (273) 60
+NEQ (274) 61
+LE (275) 62
+GE (276) 63
+
+
+Nonterminals, with rules where they appear
+
+$accept (38)
+    on left: 0
+prog (39)
+    on left: 1 2 3 5 6, on right: 0 1 2 3 5
+$@1 (40)
+    on left: 4, on right: 5
+Extern (41)
+    on left: 7, on right: 3
+SetFnInfo (42)
+    on left: 8, on right: 2 3 5 10
+fprotRest (43)
+    on left: 10 11, on right: 2 3 10
+$@2 (44)
+    on left: 9, on right: 10
+fprototype (45)
+    on left: 12, on right: 10
+parm_types (46)
+    on left: 13 14, on right: 2 3 5 12
+nonempty_parm_type_list (47)
+    on left: 15 16, on right: 14 15
+parm_type_decl (48)
+    on left: 17 18, on right: 15 16
+type (49)
+    on left: 19 20 21, on right: 1 2 3 5 17 18 24
+var_decls (50)
+    on left: 22 23, on right: 5 22
+var_decl (51)
+    on left: 24, on right: 22
+id_list (52)
+    on left: 26 28 29, on right: 1 24 26
+$@3 (53)
+    on left: 25, on right: 26
+$@4 (54)
+    on left: 27, on right: 28
+id_decl (55)
+    on left: 30 31, on right: 26 28 29
+ArraySize (56)
+    on left: 32, on right: 31
+stmt_list (57)
+    on left: 33 34, on right: 5 33 50
+stmt (58)
+    on left: 35 36 37 38 39 40 41 42 43, on right: 33 35 36 37 51
+semicolon (59)
+    on left: 44 46, on right: 37 38 39 40
+$@5 (60)
+    on left: 45, on right: 46
+comma (61)
+    on left: 47 49, on right: 10 15 26 28 91
+$@6 (62)
+    on left: 48, on right: 49
+compound_stmt (63)
+    on left: 50, on right: 41
+optional_else (64)
+    on left: 51 52, on right: 35
+optional_assgt (65)
+    on left: 53 54, on right: 37
+optional_expr (66)
+    on left: 55 56, on right: 38
+optional_boolexp (67)
+    on left: 57 58, on right: 37
+assignment (68)
+    on left: 59, on right: 39 53
+boolexp (69)
+    on left: 60 61 62 63 64 65 66 67 68 69, on right: 35 36 57 66 67
+    68 69
+expr (70)
+    on left: 70 71 72 73 74 75 76 77 78 79 80 81, on right: 55 59 60
+    61 62 63 64 65 70 71 72 73 74 77 89 91 92
+fun_call (71)
+    on left: 82 83 84, on right: 75
+proc_call (72)
+    on left: 85 86 87, on right: 40
+variable (73)
+    on left: 88 89 90, on right: 59 76
+expr_list (74)
+    on left: 91 92, on right: 83 86 91
+Ident (75)
+    on left: 93, on right: 2 3 5 12 17 18 30 31 82 83 84 85 86 87 88
+    89 90
+
+
+State 0
+
+    0 $accept: . prog $end
+
+    $default  reduce using rule 6 (prog)
+
+    prog  go to state 1
+
+
+State 1
+
+    0 $accept: prog . $end
+    1 prog: prog . type id_list ';'
+    2     | prog . type Ident '(' SetFnInfo parm_types ')' fprotRest
+    3     | prog . Extern type Ident '(' SetFnInfo parm_types ')' fprotRest
+    5     | prog . type Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}'
+
+    $end    shift, and go to state 2
+    CHAR    shift, and go to state 3
+    INT     shift, and go to state 4
+    VOID    shift, and go to state 5
+    EXTERN  shift, and go to state 6
+
+    Extern  go to state 7
+    type    go to state 8
+
+
+State 2
+
+    0 $accept: prog $end .
+
+    $default  accept
+
+
+State 3
+
+   20 type: CHAR .
+
+    $default  reduce using rule 20 (type)
+
+
+State 4
+
+   19 type: INT .
+
+    $default  reduce using rule 19 (type)
+
+
+State 5
+
+   21 type: VOID .
+
+    $default  reduce using rule 21 (type)
+
+
+State 6
+
+    7 Extern: EXTERN .
+
+    $default  reduce using rule 7 (Extern)
+
+
+State 7
+
+    3 prog: prog Extern . type Ident '(' SetFnInfo parm_types ')' fprotRest
+
+    CHAR  shift, and go to state 3
+    INT   shift, and go to state 4
+    VOID  shift, and go to state 5
+
+    type  go to state 9
+
+
+State 8
+
+    1 prog: prog type . id_list ';'
+    2     | prog type . Ident '(' SetFnInfo parm_types ')' fprotRest
+    5     | prog type . Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}'
+
+    error  shift, and go to state 10
+    ID     shift, and go to state 11
+
+    id_list  go to state 12
+    id_decl  go to state 13
+    Ident    go to state 14
+
+
+State 9
+
+    3 prog: prog Extern type . Ident '(' SetFnInfo parm_types ')' fprotRest
+
+    ID  shift, and go to state 11
+
+    Ident  go to state 15
+
+
+State 10
+
+   28 id_list: error . comma $@4 id_decl
+
+    ','  shift, and go to state 16
+
+    $default  reduce using rule 48 ($@6)
+
+    comma  go to state 17
+    $@6    go to state 18
+
+
+State 11
+
+   93 Ident: ID .
+
+    $default  reduce using rule 93 (Ident)
+
+
+State 12
+
+    1 prog: prog type id_list . ';'
+   26 id_list: id_list . comma $@3 id_decl
+
+    ','  shift, and go to state 16
+    ';'  shift, and go to state 19
+
+    $default  reduce using rule 48 ($@6)
+
+    comma  go to state 20
+    $@6    go to state 18
+
+
+State 13
+
+   29 id_list: id_decl .
+
+    $default  reduce using rule 29 (id_list)
+
+
+State 14
+
+    2 prog: prog type Ident . '(' SetFnInfo parm_types ')' fprotRest
+    5     | prog type Ident . '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}'
+   30 id_decl: Ident .
+   31        | Ident . '[' ArraySize ']'
+
+    '('  shift, and go to state 21
+    '['  shift, and go to state 22
+
+    $default  reduce using rule 30 (id_decl)
+
+
+State 15
+
+    3 prog: prog Extern type Ident . '(' SetFnInfo parm_types ')' fprotRest
+
+    '('  shift, and go to state 23
+
+
+State 16
+
+   47 comma: ',' .
+
+    $default  reduce using rule 47 (comma)
+
+
+State 17
+
+   28 id_list: error comma . $@4 id_decl
+
+    $default  reduce using rule 27 ($@4)
+
+    $@4  go to state 24
+
+
+State 18
+
+   49 comma: $@6 . error
+
+    error  shift, and go to state 25
+
+
+State 19
+
+    1 prog: prog type id_list ';' .
+
+    $default  reduce using rule 1 (prog)
+
+
+State 20
+
+   26 id_list: id_list comma . $@3 id_decl
+
+    $default  reduce using rule 25 ($@3)
+
+    $@3  go to state 26
+
+
+State 21
+
+    2 prog: prog type Ident '(' . SetFnInfo parm_types ')' fprotRest
+    5     | prog type Ident '(' . SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}'
+
+    $default  reduce using rule 8 (SetFnInfo)
+
+    SetFnInfo  go to state 27
+
+
+State 22
+
+   31 id_decl: Ident '[' . ArraySize ']'
+
+    INTCON  shift, and go to state 28
+
+    ArraySize  go to state 29
+
+
+State 23
+
+    3 prog: prog Extern type Ident '(' . SetFnInfo parm_types ')' fprotRest
+
+    $default  reduce using rule 8 (SetFnInfo)
+
+    SetFnInfo  go to state 30
+
+
+State 24
+
+   28 id_list: error comma $@4 . id_decl
+
+    ID  shift, and go to state 11
+
+    id_decl  go to state 31
+    Ident    go to state 32
+
+
+State 25
+
+   49 comma: $@6 error .
+
+    $default  reduce using rule 49 (comma)
+
+
+State 26
+
+   26 id_list: id_list comma $@3 . id_decl
+
+    ID  shift, and go to state 11
+
+    id_decl  go to state 33
+    Ident    go to state 32
+
+
+State 27
+
+    2 prog: prog type Ident '(' SetFnInfo . parm_types ')' fprotRest
+    5     | prog type Ident '(' SetFnInfo . parm_types ')' '{' $@1 var_decls stmt_list '}'
+
+    CHAR  shift, and go to state 3
+    INT   shift, and go to state 4
+    VOID  shift, and go to state 34
+
+    parm_types               go to state 35
+    nonempty_parm_type_list  go to state 36
+    parm_type_decl           go to state 37
+    type                     go to state 38
+
+
+State 28
+
+   32 ArraySize: INTCON .
+
+    $default  reduce using rule 32 (ArraySize)
+
+
+State 29
+
+   31 id_decl: Ident '[' ArraySize . ']'
+
+    ']'  shift, and go to state 39
+
+
+State 30
+
+    3 prog: prog Extern type Ident '(' SetFnInfo . parm_types ')' fprotRest
+
+    CHAR  shift, and go to state 3
+    INT   shift, and go to state 4
+    VOID  shift, and go to state 34
+
+    parm_types               go to state 40
+    nonempty_parm_type_list  go to state 36
+    parm_type_decl           go to state 37
+    type                     go to state 38
+
+
+State 31
+
+   28 id_list: error comma $@4 id_decl .
+
+    $default  reduce using rule 28 (id_list)
+
+
+State 32
+
+   30 id_decl: Ident .
+   31        | Ident . '[' ArraySize ']'
+
+    '['  shift, and go to state 22
+
+    $default  reduce using rule 30 (id_decl)
+
+
+State 33
+
+   26 id_list: id_list comma $@3 id_decl .
+
+    $default  reduce using rule 26 (id_list)
+
+
+State 34
+
+   13 parm_types: VOID .
+   21 type: VOID .
+
+    ID        reduce using rule 21 (type)
+    $default  reduce using rule 13 (parm_types)
+
+
+State 35
+
+    2 prog: prog type Ident '(' SetFnInfo parm_types . ')' fprotRest
+    5     | prog type Ident '(' SetFnInfo parm_types . ')' '{' $@1 var_decls stmt_list '}'
+
+    ')'  shift, and go to state 41
+
+
+State 36
+
+   14 parm_types: nonempty_parm_type_list .
+   15 nonempty_parm_type_list: nonempty_parm_type_list . comma parm_type_decl
+
+    ','  shift, and go to state 16
+
+    error     reduce using rule 48 ($@6)
+    $default  reduce using rule 14 (parm_types)
+
+    comma  go to state 42
+    $@6    go to state 18
+
+
+State 37
+
+   16 nonempty_parm_type_list: parm_type_decl .
+
+    $default  reduce using rule 16 (nonempty_parm_type_list)
+
+
+State 38
+
+   17 parm_type_decl: type . Ident
+   18               | type . Ident '[' ']'
+
+    ID  shift, and go to state 11
+
+    Ident  go to state 43
+
+
+State 39
+
+   31 id_decl: Ident '[' ArraySize ']' .
+
+    $default  reduce using rule 31 (id_decl)
+
+
+State 40
+
+    3 prog: prog Extern type Ident '(' SetFnInfo parm_types . ')' fprotRest
+
+    ')'  shift, and go to state 44
+
+
+State 41
+
+    2 prog: prog type Ident '(' SetFnInfo parm_types ')' . fprotRest
+    5     | prog type Ident '(' SetFnInfo parm_types ')' . '{' $@1 var_decls stmt_list '}'
+
+    ','  shift, and go to state 16
+    ';'  shift, and go to state 45
+    '{'  shift, and go to state 46
+
+    $default  reduce using rule 48 ($@6)
+
+    fprotRest  go to state 47
+    comma      go to state 48
+    $@6        go to state 18
+
+
+State 42
+
+   15 nonempty_parm_type_list: nonempty_parm_type_list comma . parm_type_decl
+
+    CHAR  shift, and go to state 3
+    INT   shift, and go to state 4
+    VOID  shift, and go to state 5
+
+    parm_type_decl  go to state 49
+    type            go to state 38
+
+
+State 43
+
+   17 parm_type_decl: type Ident .
+   18               | type Ident . '[' ']'
+
+    '['  shift, and go to state 50
+
+    $default  reduce using rule 17 (parm_type_decl)
+
+
+State 44
+
+    3 prog: prog Extern type Ident '(' SetFnInfo parm_types ')' . fprotRest
+
+    ','  shift, and go to state 16
+    ';'  shift, and go to state 45
+
+    $default  reduce using rule 48 ($@6)
+
+    fprotRest  go to state 51
+    comma      go to state 48
+    $@6        go to state 18
+
+
+State 45
+
+   11 fprotRest: ';' .
+
+    $default  reduce using rule 11 (fprotRest)
+
+
+State 46
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' . $@1 var_decls stmt_list '}'
+
+    $default  reduce using rule 4 ($@1)
+
+    $@1  go to state 52
+
+
+State 47
+
+    2 prog: prog type Ident '(' SetFnInfo parm_types ')' fprotRest .
+
+    $default  reduce using rule 2 (prog)
+
+
+State 48
+
+   10 fprotRest: comma . $@2 fprototype SetFnInfo fprotRest
+
+    $default  reduce using rule 9 ($@2)
+
+    $@2  go to state 53
+
+
+State 49
+
+   15 nonempty_parm_type_list: nonempty_parm_type_list comma parm_type_decl .
+
+    $default  reduce using rule 15 (nonempty_parm_type_list)
+
+
+State 50
+
+   18 parm_type_decl: type Ident '[' . ']'
+
+    ']'  shift, and go to state 54
+
+
+State 51
+
+    3 prog: prog Extern type Ident '(' SetFnInfo parm_types ')' fprotRest .
+
+    $default  reduce using rule 3 (prog)
+
+
+State 52
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' $@1 . var_decls stmt_list '}'
+
+    $default  reduce using rule 23 (var_decls)
+
+    var_decls  go to state 55
+
+
+State 53
+
+   10 fprotRest: comma $@2 . fprototype SetFnInfo fprotRest
+
+    ID  shift, and go to state 11
+
+    fprototype  go to state 56
+    Ident       go to state 57
+
+
+State 54
+
+   18 parm_type_decl: type Ident '[' ']' .
+
+    $default  reduce using rule 18 (parm_type_decl)
+
+
+State 55
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls . stmt_list '}'
+   22 var_decls: var_decls . var_decl ';'
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    CHAR    shift, and go to state 3
+    INT     shift, and go to state 4
+    VOID    shift, and go to state 5
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    '}'  reduce using rule 34 (stmt_list)
+
+    type           go to state 65
+    var_decl       go to state 66
+    stmt_list      go to state 67
+    stmt           go to state 68
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 56
+
+   10 fprotRest: comma $@2 fprototype . SetFnInfo fprotRest
+
+    $default  reduce using rule 8 (SetFnInfo)
+
+    SetFnInfo  go to state 74
+
+
+State 57
+
+   12 fprototype: Ident . '(' parm_types ')'
+
+    '('  shift, and go to state 75
+
+
+State 58
+
+   43 stmt: error .
+
+    $default  reduce using rule 43 (stmt)
+
+
+State 59
+
+   35 stmt: IF . '(' boolexp ')' stmt optional_else
+
+    '('  shift, and go to state 76
+
+
+State 60
+
+   36 stmt: WHILE . '(' boolexp ')' stmt
+
+    '('  shift, and go to state 77
+
+
+State 61
+
+   37 stmt: FOR . '(' optional_assgt semicolon optional_boolexp semicolon optional_assgt ')' stmt
+
+    '('  shift, and go to state 78
+
+
+State 62
+
+   38 stmt: RETURN . optional_expr semicolon
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    $default  reduce using rule 56 (optional_expr)
+
+    optional_expr  go to state 84
+    expr           go to state 85
+    fun_call       go to state 86
+    variable       go to state 87
+    Ident          go to state 88
+
+
+State 63
+
+   42 stmt: ';' .
+
+    $default  reduce using rule 42 (stmt)
+
+
+State 64
+
+   50 compound_stmt: '{' . stmt_list '}'
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    '}'  reduce using rule 34 (stmt_list)
+
+    stmt_list      go to state 89
+    stmt           go to state 68
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 65
+
+   24 var_decl: type . id_list
+
+    error  shift, and go to state 10
+    ID     shift, and go to state 11
+
+    id_list  go to state 90
+    id_decl  go to state 13
+    Ident    go to state 32
+
+
+State 66
+
+   22 var_decls: var_decls var_decl . ';'
+
+    ';'  shift, and go to state 91
+
+
+State 67
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list . '}'
+
+    '}'  shift, and go to state 92
+
+
+State 68
+
+   33 stmt_list: stmt . stmt_list
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    '}'  reduce using rule 34 (stmt_list)
+
+    stmt_list      go to state 93
+    stmt           go to state 68
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 69
+
+   41 stmt: compound_stmt .
+
+    $default  reduce using rule 41 (stmt)
+
+
+State 70
+
+   39 stmt: assignment . semicolon
+
+    ';'  shift, and go to state 94
+
+    $default  reduce using rule 45 ($@5)
+
+    semicolon  go to state 95
+    $@5        go to state 96
+
+
+State 71
+
+   40 stmt: proc_call . semicolon
+
+    ';'  shift, and go to state 94
+
+    $default  reduce using rule 45 ($@5)
+
+    semicolon  go to state 97
+    $@5        go to state 96
+
+
+State 72
+
+   59 assignment: variable . '=' expr
+
+    '='  shift, and go to state 98
+
+
+State 73
+
+   85 proc_call: Ident . '(' ')'
+   86          | Ident . '(' expr_list ')'
+   87          | Ident . '(' error ')'
+   88 variable: Ident .
+   89         | Ident . '[' expr ']'
+   90         | Ident . '[' error ']'
+
+    '('  shift, and go to state 99
+    '['  shift, and go to state 100
+
+    $default  reduce using rule 88 (variable)
+
+
+State 74
+
+   10 fprotRest: comma $@2 fprototype SetFnInfo . fprotRest
+
+    ','  shift, and go to state 16
+    ';'  shift, and go to state 45
+
+    $default  reduce using rule 48 ($@6)
+
+    fprotRest  go to state 101
+    comma      go to state 48
+    $@6        go to state 18
+
+
+State 75
+
+   12 fprototype: Ident '(' . parm_types ')'
+
+    CHAR  shift, and go to state 3
+    INT   shift, and go to state 4
+    VOID  shift, and go to state 34
+
+    parm_types               go to state 102
+    nonempty_parm_type_list  go to state 36
+    parm_type_decl           go to state 37
+    type                     go to state 38
+
+
+State 76
+
+   35 stmt: IF '(' . boolexp ')' stmt optional_else
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 105
+    expr      go to state 106
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 77
+
+   36 stmt: WHILE '(' . boolexp ')' stmt
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 107
+    expr      go to state 106
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 78
+
+   37 stmt: FOR '(' . optional_assgt semicolon optional_boolexp semicolon optional_assgt ')' stmt
+
+    ID  shift, and go to state 11
+
+    $default  reduce using rule 54 (optional_assgt)
+
+    optional_assgt  go to state 108
+    assignment      go to state 109
+    variable        go to state 72
+    Ident           go to state 110
+
+
+State 79
+
+   79 expr: INTCON .
+
+    $default  reduce using rule 79 (expr)
+
+
+State 80
+
+   80 expr: CHARCON .
+
+    $default  reduce using rule 80 (expr)
+
+
+State 81
+
+   81 expr: STRINGCON .
+
+    $default  reduce using rule 81 (expr)
+
+
+State 82
+
+   70 expr: '-' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 111
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 83
+
+   77 expr: '(' . expr ')'
+   78     | '(' . error ')'
+
+    error      shift, and go to state 112
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 113
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 84
+
+   38 stmt: RETURN optional_expr . semicolon
+
+    ';'  shift, and go to state 94
+
+    $default  reduce using rule 45 ($@5)
+
+    semicolon  go to state 114
+    $@5        go to state 96
+
+
+State 85
+
+   55 optional_expr: expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 55 (optional_expr)
+
+
+State 86
+
+   75 expr: fun_call .
+
+    $default  reduce using rule 75 (expr)
+
+
+State 87
+
+   76 expr: variable .
+
+    $default  reduce using rule 76 (expr)
+
+
+State 88
+
+   82 fun_call: Ident . '(' ')'
+   83         | Ident . '(' expr_list ')'
+   84         | Ident . '(' error ')'
+   88 variable: Ident .
+   89         | Ident . '[' expr ']'
+   90         | Ident . '[' error ']'
+
+    '('  shift, and go to state 119
+    '['  shift, and go to state 100
+
+    $default  reduce using rule 88 (variable)
+
+
+State 89
+
+   50 compound_stmt: '{' stmt_list . '}'
+
+    '}'  shift, and go to state 120
+
+
+State 90
+
+   24 var_decl: type id_list .
+   26 id_list: id_list . comma $@3 id_decl
+
+    ','  shift, and go to state 16
+
+    error     reduce using rule 48 ($@6)
+    $default  reduce using rule 24 (var_decl)
+
+    comma  go to state 20
+    $@6    go to state 18
+
+
+State 91
+
+   22 var_decls: var_decls var_decl ';' .
+
+    $default  reduce using rule 22 (var_decls)
+
+
+State 92
+
+    5 prog: prog type Ident '(' SetFnInfo parm_types ')' '{' $@1 var_decls stmt_list '}' .
+
+    $default  reduce using rule 5 (prog)
+
+
+State 93
+
+   33 stmt_list: stmt stmt_list .
+
+    $default  reduce using rule 33 (stmt_list)
+
+
+State 94
+
+   44 semicolon: ';' .
+
+    $default  reduce using rule 44 (semicolon)
+
+
+State 95
+
+   39 stmt: assignment semicolon .
+
+    $default  reduce using rule 39 (stmt)
+
+
+State 96
+
+   46 semicolon: $@5 . error
+
+    error  shift, and go to state 121
+
+
+State 97
+
+   40 stmt: proc_call semicolon .
+
+    $default  reduce using rule 40 (stmt)
+
+
+State 98
+
+   59 assignment: variable '=' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 122
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 99
+
+   85 proc_call: Ident '(' . ')'
+   86          | Ident '(' . expr_list ')'
+   87          | Ident '(' . error ')'
+
+    error      shift, and go to state 123
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+    ')'        shift, and go to state 124
+
+    expr       go to state 125
+    fun_call   go to state 86
+    variable   go to state 87
+    expr_list  go to state 126
+    Ident      go to state 88
+
+
+State 100
+
+   89 variable: Ident '[' . expr ']'
+   90         | Ident '[' . error ']'
+
+    error      shift, and go to state 127
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 128
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 101
+
+   10 fprotRest: comma $@2 fprototype SetFnInfo fprotRest .
+
+    $default  reduce using rule 10 (fprotRest)
+
+
+State 102
+
+   12 fprototype: Ident '(' parm_types . ')'
+
+    ')'  shift, and go to state 129
+
+
+State 103
+
+   66 boolexp: '!' . boolexp
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 130
+    expr      go to state 106
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 104
+
+   69 boolexp: '(' . boolexp ')'
+   77 expr: '(' . expr ')'
+   78     | '(' . error ')'
+
+    error      shift, and go to state 112
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 131
+    expr      go to state 132
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 105
+
+   35 stmt: IF '(' boolexp . ')' stmt optional_else
+   67 boolexp: boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+
+    AND  shift, and go to state 133
+    OR   shift, and go to state 134
+    ')'  shift, and go to state 135
+
+
+State 106
+
+   60 boolexp: expr . EQ expr
+   61        | expr . NEQ expr
+   62        | expr . LE expr
+   63        | expr . GE expr
+   64        | expr . '<' expr
+   65        | expr . '>' expr
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    EQ   shift, and go to state 136
+    NEQ  shift, and go to state 137
+    LE   shift, and go to state 138
+    GE   shift, and go to state 139
+    '<'  shift, and go to state 140
+    '>'  shift, and go to state 141
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+
+State 107
+
+   36 stmt: WHILE '(' boolexp . ')' stmt
+   67 boolexp: boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+
+    AND  shift, and go to state 133
+    OR   shift, and go to state 134
+    ')'  shift, and go to state 142
+
+
+State 108
+
+   37 stmt: FOR '(' optional_assgt . semicolon optional_boolexp semicolon optional_assgt ')' stmt
+
+    ';'  shift, and go to state 94
+
+    $default  reduce using rule 45 ($@5)
+
+    semicolon  go to state 143
+    $@5        go to state 96
+
+
+State 109
+
+   53 optional_assgt: assignment .
+
+    $default  reduce using rule 53 (optional_assgt)
+
+
+State 110
+
+   88 variable: Ident .
+   89         | Ident . '[' expr ']'
+   90         | Ident . '[' error ']'
+
+    '['  shift, and go to state 100
+
+    $default  reduce using rule 88 (variable)
+
+
+State 111
+
+   70 expr: '-' expr .
+   71     | expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    $default  reduce using rule 70 (expr)
+
+
+State 112
+
+   78 expr: '(' error . ')'
+
+    ')'  shift, and go to state 144
+
+
+State 113
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+   77     | '(' expr . ')'
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+    ')'  shift, and go to state 145
+
+
+State 114
+
+   38 stmt: RETURN optional_expr semicolon .
+
+    $default  reduce using rule 38 (stmt)
+
+
+State 115
+
+   71 expr: expr '+' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 146
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 116
+
+   72 expr: expr '-' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 147
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 117
+
+   73 expr: expr '*' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 148
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 118
+
+   74 expr: expr '/' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 149
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 119
+
+   82 fun_call: Ident '(' . ')'
+   83         | Ident '(' . expr_list ')'
+   84         | Ident '(' . error ')'
+
+    error      shift, and go to state 150
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+    ')'        shift, and go to state 151
+
+    expr       go to state 125
+    fun_call   go to state 86
+    variable   go to state 87
+    expr_list  go to state 152
+    Ident      go to state 88
+
+
+State 120
+
+   50 compound_stmt: '{' stmt_list '}' .
+
+    $default  reduce using rule 50 (compound_stmt)
+
+
+State 121
+
+   46 semicolon: $@5 error .
+
+    $default  reduce using rule 46 (semicolon)
+
+
+State 122
+
+   59 assignment: variable '=' expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 59 (assignment)
+
+
+State 123
+
+   87 proc_call: Ident '(' error . ')'
+
+    ')'  shift, and go to state 153
+
+
+State 124
+
+   85 proc_call: Ident '(' ')' .
+
+    $default  reduce using rule 85 (proc_call)
+
+
+State 125
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+   91 expr_list: expr . comma expr_list
+   92          | expr .
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+    ','  shift, and go to state 16
+
+    ')'       reduce using rule 92 (expr_list)
+    $default  reduce using rule 48 ($@6)
+
+    comma  go to state 154
+    $@6    go to state 18
+
+
+State 126
+
+   86 proc_call: Ident '(' expr_list . ')'
+
+    ')'  shift, and go to state 155
+
+
+State 127
+
+   90 variable: Ident '[' error . ']'
+
+    ']'  shift, and go to state 156
+
+
+State 128
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+   89 variable: Ident '[' expr . ']'
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+    ']'  shift, and go to state 157
+
+
+State 129
+
+   12 fprototype: Ident '(' parm_types ')' .
+
+    $default  reduce using rule 12 (fprototype)
+
+
+State 130
+
+   66 boolexp: '!' boolexp .
+   67        | boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+
+    $default  reduce using rule 66 (boolexp)
+
+
+State 131
+
+   67 boolexp: boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+   69        | '(' boolexp . ')'
+
+    AND  shift, and go to state 133
+    OR   shift, and go to state 134
+    ')'  shift, and go to state 158
+
+
+State 132
+
+   60 boolexp: expr . EQ expr
+   61        | expr . NEQ expr
+   62        | expr . LE expr
+   63        | expr . GE expr
+   64        | expr . '<' expr
+   65        | expr . '>' expr
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+   77     | '(' expr . ')'
+
+    EQ   shift, and go to state 136
+    NEQ  shift, and go to state 137
+    LE   shift, and go to state 138
+    GE   shift, and go to state 139
+    '<'  shift, and go to state 140
+    '>'  shift, and go to state 141
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+    ')'  shift, and go to state 145
+
+
+State 133
+
+   67 boolexp: boolexp AND . boolexp
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 159
+    expr      go to state 106
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 134
+
+   68 boolexp: boolexp OR . boolexp
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    boolexp   go to state 160
+    expr      go to state 106
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 135
+
+   35 stmt: IF '(' boolexp ')' . stmt optional_else
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    stmt           go to state 161
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 136
+
+   60 boolexp: expr EQ . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 162
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 137
+
+   61 boolexp: expr NEQ . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 163
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 138
+
+   62 boolexp: expr LE . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 164
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 139
+
+   63 boolexp: expr GE . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 165
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 140
+
+   64 boolexp: expr '<' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 166
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 141
+
+   65 boolexp: expr '>' . expr
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr      go to state 167
+    fun_call  go to state 86
+    variable  go to state 87
+    Ident     go to state 88
+
+
+State 142
+
+   36 stmt: WHILE '(' boolexp ')' . stmt
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    stmt           go to state 168
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 143
+
+   37 stmt: FOR '(' optional_assgt semicolon . optional_boolexp semicolon optional_assgt ')' stmt
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '!'        shift, and go to state 103
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 104
+
+    $default  reduce using rule 58 (optional_boolexp)
+
+    optional_boolexp  go to state 169
+    boolexp           go to state 170
+    expr              go to state 106
+    fun_call          go to state 86
+    variable          go to state 87
+    Ident             go to state 88
+
+
+State 144
+
+   78 expr: '(' error ')' .
+
+    $default  reduce using rule 78 (expr)
+
+
+State 145
+
+   77 expr: '(' expr ')' .
+
+    $default  reduce using rule 77 (expr)
+
+
+State 146
+
+   71 expr: expr . '+' expr
+   71     | expr '+' expr .
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 71 (expr)
+
+
+State 147
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   72     | expr '-' expr .
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 72 (expr)
+
+
+State 148
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   73     | expr '*' expr .
+   74     | expr . '/' expr
+
+    $default  reduce using rule 73 (expr)
+
+
+State 149
+
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+   74     | expr '/' expr .
+
+    $default  reduce using rule 74 (expr)
+
+
+State 150
+
+   84 fun_call: Ident '(' error . ')'
+
+    ')'  shift, and go to state 171
+
+
+State 151
+
+   82 fun_call: Ident '(' ')' .
+
+    $default  reduce using rule 82 (fun_call)
+
+
+State 152
+
+   83 fun_call: Ident '(' expr_list . ')'
+
+    ')'  shift, and go to state 172
+
+
+State 153
+
+   87 proc_call: Ident '(' error ')' .
+
+    $default  reduce using rule 87 (proc_call)
+
+
+State 154
+
+   91 expr_list: expr comma . expr_list
+
+    ID         shift, and go to state 11
+    INTCON     shift, and go to state 79
+    CHARCON    shift, and go to state 80
+    STRINGCON  shift, and go to state 81
+    '-'        shift, and go to state 82
+    '('        shift, and go to state 83
+
+    expr       go to state 125
+    fun_call   go to state 86
+    variable   go to state 87
+    expr_list  go to state 173
+    Ident      go to state 88
+
+
+State 155
+
+   86 proc_call: Ident '(' expr_list ')' .
+
+    $default  reduce using rule 86 (proc_call)
+
+
+State 156
+
+   90 variable: Ident '[' error ']' .
+
+    $default  reduce using rule 90 (variable)
+
+
+State 157
+
+   89 variable: Ident '[' expr ']' .
+
+    $default  reduce using rule 89 (variable)
+
+
+State 158
+
+   69 boolexp: '(' boolexp ')' .
+
+    $default  reduce using rule 69 (boolexp)
+
+
+State 159
+
+   67 boolexp: boolexp . AND boolexp
+   67        | boolexp AND boolexp .
+   68        | boolexp . OR boolexp
+
+    $default  reduce using rule 67 (boolexp)
+
+
+State 160
+
+   67 boolexp: boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+   68        | boolexp OR boolexp .
+
+    $default  reduce using rule 68 (boolexp)
+
+
+State 161
+
+   35 stmt: IF '(' boolexp ')' stmt . optional_else
+
+    ELSE  shift, and go to state 174
+
+    ELSE      [reduce using rule 52 (optional_else)]
+    $default  reduce using rule 52 (optional_else)
+
+    optional_else  go to state 175
+
+
+State 162
+
+   60 boolexp: expr EQ expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 60 (boolexp)
+
+
+State 163
+
+   61 boolexp: expr NEQ expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 61 (boolexp)
+
+
+State 164
+
+   62 boolexp: expr LE expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 62 (boolexp)
+
+
+State 165
+
+   63 boolexp: expr GE expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 63 (boolexp)
+
+
+State 166
+
+   64 boolexp: expr '<' expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 64 (boolexp)
+
+
+State 167
+
+   65 boolexp: expr '>' expr .
+   71 expr: expr . '+' expr
+   72     | expr . '-' expr
+   73     | expr . '*' expr
+   74     | expr . '/' expr
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 65 (boolexp)
+
+
+State 168
+
+   36 stmt: WHILE '(' boolexp ')' stmt .
+
+    $default  reduce using rule 36 (stmt)
+
+
+State 169
+
+   37 stmt: FOR '(' optional_assgt semicolon optional_boolexp . semicolon optional_assgt ')' stmt
+
+    ';'  shift, and go to state 94
+
+    $default  reduce using rule 45 ($@5)
+
+    semicolon  go to state 176
+    $@5        go to state 96
+
+
+State 170
+
+   57 optional_boolexp: boolexp .
+   67 boolexp: boolexp . AND boolexp
+   68        | boolexp . OR boolexp
+
+    AND  shift, and go to state 133
+    OR   shift, and go to state 134
+
+    $default  reduce using rule 57 (optional_boolexp)
+
+
+State 171
+
+   84 fun_call: Ident '(' error ')' .
+
+    $default  reduce using rule 84 (fun_call)
+
+
+State 172
+
+   83 fun_call: Ident '(' expr_list ')' .
+
+    $default  reduce using rule 83 (fun_call)
+
+
+State 173
+
+   91 expr_list: expr comma expr_list .
+
+    $default  reduce using rule 91 (expr_list)
+
+
+State 174
+
+   51 optional_else: ELSE . stmt
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    stmt           go to state 177
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 175
+
+   35 stmt: IF '(' boolexp ')' stmt optional_else .
+
+    $default  reduce using rule 35 (stmt)
+
+
+State 176
+
+   37 stmt: FOR '(' optional_assgt semicolon optional_boolexp semicolon . optional_assgt ')' stmt
+
+    ID  shift, and go to state 11
+
+    $default  reduce using rule 54 (optional_assgt)
+
+    optional_assgt  go to state 178
+    assignment      go to state 109
+    variable        go to state 72
+    Ident           go to state 110
+
+
+State 177
+
+   51 optional_else: ELSE stmt .
+
+    $default  reduce using rule 51 (optional_else)
+
+
+State 178
+
+   37 stmt: FOR '(' optional_assgt semicolon optional_boolexp semicolon optional_assgt . ')' stmt
+
+    ')'  shift, and go to state 179
+
+
+State 179
+
+   37 stmt: FOR '(' optional_assgt semicolon optional_boolexp semicolon optional_assgt ')' . stmt
+
+    error   shift, and go to state 58
+    ID      shift, and go to state 11
+    IF      shift, and go to state 59
+    WHILE   shift, and go to state 60
+    FOR     shift, and go to state 61
+    RETURN  shift, and go to state 62
+    ';'     shift, and go to state 63
+    '{'     shift, and go to state 64
+
+    stmt           go to state 180
+    compound_stmt  go to state 69
+    assignment     go to state 70
+    proc_call      go to state 71
+    variable       go to state 72
+    Ident          go to state 73
+
+
+State 180
+
+   37 stmt: FOR '(' optional_assgt semicolon optional_boolexp semicolon optional_assgt ')' stmt .
+
+    $default  reduce using rule 37 (stmt)

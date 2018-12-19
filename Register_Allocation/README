@@ -1,0 +1,136 @@
+Hi Professor,
+This are some test cases that I prepared and the output that I obtained . I have 
+taken into account 4 conditions 
+1. Without Optimization 
+2. With Optimization
+3. With Register allocation
+4. With Optimization and Register allocation
+
+Outputs:
+1. Without Optimization 
+        1. Factorial
+            720720720Stats -- #instructions : 537
+            #reads : 182  #writes 131  #branches 54  #other 170
+        2. test01
+            1
+            12345678910
+            12345678910
+            12345678910Stats -- #instructions : 453
+            #reads : 99  #writes 100  #branches 71  #other 183
+        3. test02
+            1
+            12345678910
+            12345678910
+            1256789101112Stats -- #instructions : 595
+            #reads : 153  #writes 148  #branches 76  #other 218
+        4. test03
+            1
+            12345678910
+            23345678910
+            1156789101112Stats -- #instructions : 879
+            #reads : 255  #writes 244  #branches 88  #other 292
+        5. test04
+            1
+            12345678910
+            23345678910
+            158851588556789101112
+            979813
+            9710099
+            1215885Stats -- #instructions : 1123
+            #reads : 307  #writes 275  #branches 112  #other 429
+        
+2. With Optimization
+        1. Factorial
+            720720720Stats -- #instructions : 469
+            #reads : 152  #writes 101  #branches 46  #other 170
+        2. test01
+            1
+            12345678910
+            12345678910
+            12345678910Stats -- #instructions : 391
+            #reads : 68  #writes 69  #branches 71  #other 183
+        3. test02
+            1
+            12345678910
+            12345678910
+            1256789101112Stats -- #instructions : 500
+            #reads : 106  #writes 101  #branches 75  #other 218
+        4. test03
+            1
+            12345678910
+            23345678910
+            1156789101112Stats -- #instructions : 722
+            #reads : 178  #writes 167  #branches 85  #other 292
+        5. test04
+            1
+            12345678910
+            23345678910
+            158851588556789101112
+            979813
+            9710099
+            1215885Stats -- #instructions : 936
+            #reads : 215  #writes 193  #branches 109  #other 419
+
+3. With Register allocation
+        1. Factorial
+            720720720Stats -- #instructions : 350
+            #reads : 45  #writes 44  #branches 54  #other 207
+        2. test01
+            1
+            12345678910
+            12345678910
+            12345678910Stats -- #instructions : 365
+            #reads : 48  #writes 47  #branches 71  #other 199
+        3. test02
+            1
+            12345678910
+            12345678910
+            1256789101112Stats -- #instructions : 422
+            #reads : 48  #writes 47  #branches 76  #other 251
+        4. test03
+            1
+            12345678910
+            23345678910
+            1156789101112Stats -- #instructions : 539
+            #reads : 49  #writes 48  #branches 88  #other 354
+        5. test04
+            1
+            12345678910
+            23345678910
+            158851588556789101112
+            979813
+            9710099
+            1215885Stats -- #instructions : 721
+             #reads : 78  #writes 69  #branches 112  #other 462
+
+4. With Optimization and Register
+        1. Factorial
+            720720720Stats -- #instructions : 312
+            #reads : 45  #writes 44  #branches 46  #other 177
+        2. test01
+            1
+            12345678910
+            12345678910
+            12345678910Stats -- #instructions : 346
+            #reads : 48  #writes 47  #branches 71  #other 180
+        3. test02
+            1
+            12345678910
+            12345678910
+            1256789101112Stats -- #instructions : 385
+            #reads : 48  #writes 47  #branches 75  #other 215
+        4. test03
+            1
+            12345678910
+            23345678910
+            1156789101112Stats -- #instructions : 471
+            #reads : 49  #writes 48  #branches 85  #other 289
+        5. test04
+            4
+            42345678910
+            34345678910
+            158851588556789101112
+            979813
+            9710099
+            1215885Stats -- #instructions : 651
+            #reads : 77  #writes 68  #branches 109  #other 397

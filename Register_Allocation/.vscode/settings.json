@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "typeinfo": "c",
+        "system_error": "c",
+        "*.tcc": "c",
+        "graph_coloring.h": "c"
+    }
+}
